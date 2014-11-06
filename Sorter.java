@@ -1,5 +1,7 @@
+import java.util.Random;
 public class Sorter {
-  private static int array[] = {7,5,8,1,2,4,1,4};
+  private static int array[];
+
   public static void main(String args[]) {
       if (args.length != 0) {
         array = new int[args.length];
@@ -8,26 +10,31 @@ public class Sorter {
           array[i] = temp;
         }
       }
+      else {
+        array = new int[10];
+        Random random = new Random();
+        for (int i = 0; i < array.length; i++) {
+          array[i] = random.nextInt(10) + 1;
+        }
+      }
       printArray();
-      Sorter sorter = new Sorter();
-      //sorter.insertSort(array);
-      //printArray();
-      //sorter.insertSortDes(array);
-      //sorter.selectSort(array);
-      sorter.mergeSort(array, 0, array.length - 1);
+      //insertSort(array);
+      //insertSortDes(array);
+      //selectSort(array);
+      mergeSort(array, 0, array.length - 1);
       printArray();
 	}
 
   public static void printArray() {
     System.out.println();
-    for(int i = 0;i <array.length;i++) {
+    for(int i = 0;i < array.length; i++) {
       System.out.print(array[i] + " ");
     }
   }
 
   public static void printArray(int[] array) {
     System.out.println();
-    for(int i = 0;i <array.length;i++) {
+    for(int i = 0;i < array.length; i++) {
       System.out.print(array[i] + " ");
     }
   }
@@ -42,7 +49,7 @@ public class Sorter {
     and is true at the terminate when numbersorted = n;
     every loop numbersorted + 1
   */
-	public void insertSort(int[] array) {
+	public static void insertSort(int[] array) {
     for (int i = 1; i < array.length; i++) {
       int key = array[i];
       int j = i - 1;
@@ -54,7 +61,8 @@ public class Sorter {
     }
   }
 
-  public void insertSortDes(int[] array) {
+  //insertion sort by des order
+  public static void insertSortDes(int[] array) {
     for (int i = 1; i < array.length; i++) {
       int key = array[i];
       int j = i - 1;
@@ -77,7 +85,8 @@ public class Sorter {
   loop invariant is true before and after every loop
   is true at end when nextToCheck = n;
   */
-  public int findMin(int[]array, int startIndex) {
+  // linear search a unsorted array
+  public static int findMin(int[]array, int startIndex) {
     int minIndex = startIndex;
     for (int nextToCheck = startIndex + 1; nextToCheck < array.length; nextToCheck++) {
       if(array[minIndex] > array[nextToCheck]) {
@@ -87,7 +96,8 @@ public class Sorter {
     return minIndex;
   }
 
-  public void swap(int[] array, int index1, int index2) {
+  // swap two elements in array
+  public static void swap(int[] array, int index1, int index2) {
     int tmp = array[index1];
     array[index1] = array[index2];
     array[index2] = tmp;
@@ -105,13 +115,13 @@ public class Sorter {
   every loop numbersorted + 1
 
   */
-  public void selectSort(int[] array) {
+  public static void selectSort(int[] array) {
     for (int numbersorted = 0; numbersorted < array.length - 1; numbersorted++) {
       swap(array, findMin(array, numbersorted), numbersorted);
     }
   }
 
-  public void mergeSort(int[] array, int startIndex, int endIndex) {
+  public static void mergeSort(int[] array, int startIndex, int endIndex) {
     if (startIndex < endIndex) {
       int splitIndex = (startIndex + endIndex) / 2;
       mergeSort(array, startIndex, splitIndex);
@@ -123,17 +133,60 @@ public class Sorter {
     }
   }
 
-  public void merge2(int[] array, int startIndex, int splitIndex, int endIndex) {
+  // merge without etra setinel element
+  public static void merge2(int[] array, int startIndex, int splitIndex, int endIndex) {
+    int L_array[] = new int[splitIndex - startIndex + 1];
+    int R_array[] = new int[endIndex - splitIndex];
 
+    for (int i = 0; i < splitIndex - startIndex + 1; i++) {
+      L_array[i] = array[startIndex + i];
+    }
+    for (int i = 0; i < endIndex - splitIndex; i++) {
+      R_array[i] = array[splitIndex + 1 + i];
+    }
+
+    int L_Index = 0;
+    int R_Index = 0;
+    int A_Index = startIndex;
+
+    while (L_Index <= (splitIndex - startIndex) && R_Index <= (endIndex  - splitIndex - 1)) {
+      if (L_array[L_Index] > R_array[R_Index]) {
+        array[A_Index] = R_array[R_Index];
+        R_Index++;
+        A_Index++;
+      }
+      else {
+        array[A_Index] = L_array[L_Index];
+        L_Index++;
+        A_Index++;
+      }
+    }
+
+    if (R_Index <= (endIndex  - splitIndex - 1)) {
+      while (A_Index <= endIndex) {
+        array[A_Index] = R_array[R_Index];
+        A_Index++;
+        R_Index++;
+      }
+    }
+
+    if (L_Index <= (splitIndex - startIndex)) {
+      while (A_Index <= endIndex) {
+        array[A_Index] = L_array[L_Index];
+        A_Index++;
+        L_Index++;
+      }
+    }
   }
   /*
   loop invariant
   1. array[startIndex, startIndex + numberMerged) are the smallest numberMerged
     values order by asce in array[startIndex, endIndex];
-  2. L nextChecked is the smallest in the rest values of L array
-  3. R nextChecked is the smallest in the rest values of R array
+  2. L_nextChecked is the smallest in the rest values of L array
+  3. R_nextChecked is the smallest in the rest values of R array
   */
-  public void merge(int[] array, int startIndex, int splitIndex, int endIndex) {
+  // merge with etra setinel element
+  public static void merge(int[] array, int startIndex, int splitIndex, int endIndex) {
 
     int L_array[] = new int[splitIndex - startIndex + 2];
     int R_array[] = new int[endIndex - splitIndex + 1];
@@ -149,10 +202,6 @@ public class Sorter {
     for (int i = 0; i < endIndex - splitIndex; i++) {
       R_array[i] = array[splitIndex + 1 + i];
     }
-
-    //printArray(L_array);
-    //printArray(R_array);
-    //printArray(array);
 
     int L_Index = 0;
     int R_Index = 0;
@@ -186,9 +235,5 @@ public class Sorter {
         L_Index++;
       }
     }
-
-    //printArray(L_array);
-    //printArray(R_array);
-    //printArray(array);
   }
 }
