@@ -29,9 +29,9 @@ public class Sorter {
     //insertSort(array);
     //insertSortDes(array);
     //insertSortRecursive(array, array.length - 1);
-    insertSortImproved(array);
+    //insertSortImproved(array);
     //selectSort(array);
-    //mergeSort(array, 0, array.length - 1);
+    mergeSort(array, 0, array.length - 1);
     printArray();
     //printArray();
 	}
@@ -265,7 +265,7 @@ public class Sorter {
       int splitIndex = (startIndex + endIndex) / 2;
       mergeSort(array, startIndex, splitIndex);
       mergeSort(array, splitIndex + 1, endIndex);
-      merge(array, startIndex, splitIndex, endIndex);
+      merge2(array, startIndex, splitIndex, endIndex);
     }
     else if (startIndex == endIndex){
       return;
@@ -347,8 +347,18 @@ public class Sorter {
     int R_Index = 0;
     int A_Index = startIndex;
 
-    while (L_Index <= (splitIndex - startIndex) && R_Index <= (endIndex  - splitIndex - 1)) {
-      if (L_array[L_Index] > R_array[R_Index]) {
+    while (A_Index <= endIndex) {
+      if (L_Index > splitIndex - startIndex) {
+        array[A_Index] = R_array[R_Index];
+        R_Index++;
+        A_Index++;
+      }
+      else if(R_Index > endIndex - splitIndex - 1) {
+        array[A_Index] = L_array[L_Index];
+        L_Index++;
+        A_Index++;
+      }
+      else if (L_array[L_Index] > R_array[R_Index]) {
         array[A_Index] = R_array[R_Index];
         R_Index++;
         A_Index++;
@@ -357,22 +367,6 @@ public class Sorter {
         array[A_Index] = L_array[L_Index];
         L_Index++;
         A_Index++;
-      }
-    }
-
-    if (R_Index <= (endIndex  - splitIndex - 1)) {
-      while (A_Index <= endIndex) {
-        array[A_Index] = R_array[R_Index];
-        A_Index++;
-        R_Index++;
-      }
-    }
-
-    if (L_Index <= (splitIndex - startIndex)) {
-      while (A_Index <= endIndex) {
-        array[A_Index] = L_array[L_Index];
-        A_Index++;
-        L_Index++;
       }
     }
   }
