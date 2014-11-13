@@ -2,22 +2,6 @@ import java.util.Random;
 public class Sorter {
   private static int array[];
 
-  public static void getRandArray() {
-    array = new int[10];
-    Random random = new Random();
-    for (int i = 0; i < array.length; i++) {
-      array[i] = random.nextInt(10) + 1;
-    }
-  }
-
-  public static void getArrayFromArgs(String args[]) {
-    array = new int[args.length];
-    for(int i  =0; i < args.length; i++) {
-      int temp = Integer.parseInt(args[i]);
-      array[i] = temp;
-    }
-  }
-
   public static void main(String args[]) {
     if (args.length != 0) {
       getArrayFromArgs(args);
@@ -31,23 +15,59 @@ public class Sorter {
     //insertSortRecursive(array, array.length - 1);
     //insertSortImproved(array);
     //selectSort(array);
-    mergeSort(array, 0, array.length - 1);
+    //mergeSort(array, 0, array.length - 1);
+    heapSort(array);
     printArray();
-    //printArray();
 	}
 
-  public static void printArray() {
-    for(int i = 0;i < array.length; i++) {
-      System.out.print(array[i] + " ");
+  public static void heapSort(int array[]) {
+    buildMaxHeap(array);
+    printArray();
+    for(int heapsize = array.length; heapsize > 1; heapsize--) {
+      swap(array, 0, heapsize - 1);
+      maxHeapify(0, array, heapsize - 1);
     }
-    System.out.println();
   }
 
-  public static void printArray(int[] array) {
-    for(int i = 0;i < array.length; i++) {
-      System.out.print(array[i] + " ");
+  public static void buildMaxHeap(int array[]) {
+    for(int i = array.length/2 - 1; i >= 0; i--) {
+      maxHeapify(i, array, array.length);
     }
-    System.out.println();
+  }
+
+  public static void maxHeapify(int index, int array[], int heapsize) {
+    int left = left(index);
+    int right = right(index);
+    int key = index;
+    while (left < heapsize) {
+      if (array[left] > array[key]) {
+        key = left;
+      }
+      if (right < heapsize && array[right] > array[key]) {
+        key = right;
+      }
+      if (key != index) {
+        swap(array, index, key);
+        index = key;
+        left = left(index);
+        right = right(index);
+      }
+      else{
+        return;
+      }
+    }
+  }
+
+  public static int left(int index) {
+    return 2 * index + 1;
+  }
+
+  public static int right(int index) {
+    return 2 * index + 2;
+  }
+
+  public static int parent(int index) {
+    return (index - 1) / 2;
   }
 
   /* loop invariant
@@ -369,5 +389,35 @@ public class Sorter {
         A_Index++;
       }
     }
+  }
+
+  public static void getRandArray() {
+    array = new int[10];
+    Random random = new Random();
+    for (int i = 0; i < array.length; i++) {
+      array[i] = random.nextInt(10) + 1;
+    }
+  }
+
+  public static void getArrayFromArgs(String args[]) {
+    array = new int[args.length];
+    for(int i  =0; i < args.length; i++) {
+      int temp = Integer.parseInt(args[i]);
+      array[i] = temp;
+    }
+  }
+
+  public static void printArray() {
+    for(int i = 0;i < array.length; i++) {
+      System.out.print(array[i] + " ");
+    }
+    System.out.println();
+  }
+
+  public static void printArray(int[] array) {
+    for(int i = 0;i < array.length; i++) {
+      System.out.print(array[i] + " ");
+    }
+    System.out.println();
   }
 }
